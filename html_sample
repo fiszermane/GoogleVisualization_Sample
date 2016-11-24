@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("upcoming", {packages:["map"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+      
+        _drawSheetName();
+        
+      }
+
+      function _drawSheetName() {
+           // Select query with COLUMNS from your Google Sheet source
+           var queryString = encodeURIComponent('SELECT X, Y, Z');
+           // Where XXXXXXXXXX and YYYYYYY are unique to your data
+           // XXXXXXXXXX = > Spreadsheet ID
+           // YYYYY => Sheet name
+           var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/XXXXXXXXXXXXXXXXXXXXXXXX/gviz/tq?sheet=YYYYYYYYY&headers=1&tq=' + queryString);
+           query.send(_handleSampleDataQueryResponse);
+      }
+
+      function _handleSampleDataQueryResponse(response) {
+           if (response.isError()) {
+                 alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+                 return;
+           }
+           var data = response.getDataTable();
+           var map = new google.visualization.Map(document.getElementById('map_div'));
+           // Google Maps Options
+           // https://developers.google.com/chart/interactive/docs/gallery/map
+           map.draw(data, {  
+               showTooltip: true,
+               showInfoWindow: true,
+               mapType:"normal",
+               enableScrollWheel: true});
+               
+      }
+
+
+    </script>
+  </head>
+
+  <body>
+    <div id="map_div" style="width: 600px; height: 600px"></div>
+  </body>
+</html>
